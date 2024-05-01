@@ -1,0 +1,1893 @@
+1. Binary max (guru)
+
+package code;
+import java.util.Scanner;
+
+public class BinaryMax {
+
+public static String maxIndexDiff(int arr[], int n) { 
+int maxDiff = Integer.MIN_VALUE;
+for (int i = 0; i < n; i++) {
+for (int j = n - 1; j >=0; j--) {
+if (arr[i] >= 0) {
+if (arr[j] >= arr[i] && maxDiff < (j-i)) maxDiff = j - i;
+}
+else {
+return "00000000";
+}
+}
+}
+String result = Integer.toBinaryString(maxDiff); int num = Integer.valueOf(result);
+result = String.format("%08d", num);
+return result;
+}
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+int length = sc.nextInt();
+int[] arr = new int[length];
+for (int i = 0; i < length; i++) {
+arr[i] = sc.nextInt();
+}
+int n = arr.length;
+String maxDiff = maxIndexDiff(arr,n);
+System.out.println(maxDiff);
+sc.close();
+}
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+2. Encrypted numbers (guru)
+
+package code;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class EncryptedNumbers {
+
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+Integer size = sc.nextInt();
+int[] arr = new int[size];
+for (int i=0; i < size; i++) {
+arr[i] = sc.nextInt();
+}
+sc.close();
+Arrays.sort(arr);
+List<String> ListOfSecretMsgs =new ArrayList<>();
+for(int i =0; i< size; i++) {
+if(arr[i]<65 || arr[i]>90 && arr[i]<97 || arr[i]>122) {
+int temp= arr[i];
+int reverse = 0;
+int r = 0;
+while (temp!=0) {
+r =temp % 10;
+reverse = reverse * 10 + r;
+temp = temp /10;
+}
+ListOfSecretMsgs.add(Integer.toString(reverse));
+} else {
+int temp = arr[i];
+char asc = (char) arr[i];
+int reverse = 0;
+int r = 0;
+while (temp!=0) {
+r =temp % 10;
+reverse = reverse * 10 + r;
+temp = temp /10;
+}
+ListOfSecretMsgs.add(String.valueOf(asc) + Integer.toString(reverse));
+
+}
+}
+System.out.println(ListOfSecretMsgs);
+
+}
+
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+3.EMI calculator (guru)
+
+package code;
+//Emi Calculator
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
+class AccountDetails {
+private long accountNo;
+private String accountHolderName;
+private double accountBalance;
+private String address;
+private LocalDate dateOfBirth;
+public LocalDate getDateOfBirth() {
+
+return dateOfBirth;
+}
+public void setDateOfBirth(LocalDate dateOfBirth) { 
+this.dateOfBirth = dateOfBirth; 
+}
+public long getAccountNo () { 
+return accountNo;
+}
+public void setAccountNo (long accountNo) {
+this.accountNo = accountNo; 
+}
+public String getAccountHolderName() {
+return accountHolderName;
+}
+public void setAccountHolderName (String accountHolderlame) {
+this.accountHolderName = accountHolderName;
+}
+public double getAccountBalance () {
+return accountBalance;
+} 
+public void setAccountBalance (double accountBalance) {
+this.accountBalance = accountBalance;
+}
+public String getAddress() {
+return address;
+}
+public void SetAddress(String address ){
+this.address = address;
+}
+public AccountDetails() { 
+super();
+//TODO Auto-generated constructor stub
+}
+public AccountDetails (long accountNo, String accountHolderName, double accountBalance, String address) { 
+super();
+this.accountNo = accountNo;
+this.accountHolderName = accountHolderName;
+this.accountBalance = accountBalance;
+this.address = address;
+}
+@Override
+public String toString() {
+return "AccountDetails [accountNo=" + accountNo + ", accountHolderiame="+ accountHolderName + ",accountBalance="+ accountBalance + ",address=" + address + "]";
+}
+} 
+enum LoanType{
+CAR_LOAN, HOME_LOAN, PERSONAL_LOAN;
+}
+class Loan{
+private LoanType typeOfLoan; 
+private double loanAmount;
+private int noOfMonths;
+public LoanType getTypeOfLoan() {
+return typeOfLoan;
+}
+public void setTypeofLoan (LoanType typeOfLoan) {
+this.typeOfLoan = typeOfLoan;
+}
+public double getLoanAmount () {
+return loanAmount;
+}
+public void setLoanAmount(double loanAmount) {
+this.loanAmount = loanAmount;
+}
+public int getNoOfMonths () {
+return noOfMonths;
+}
+public void setNoOfMonths(int noOfMonths) {
+this.noOfMonths = noOfMonths; }
+
+@Override
+public String toString() {
+return "Loan [typeofLoan=" + typeOfLoan + ", loanAmount=" + loanAmount + ",noOfMonths= "+ noOfMonths; 
+}
+public Loan (LoanType typeOfLoan, double loanAmount, int noOfMonths) { 
+super();
+this.typeOfLoan = typeOfLoan;
+this.loanAmount = loanAmount;
+this.noOfMonths = noOfMonths;
+}
+public Loan(){
+super();
+}
+}
+
+public class InfyEMICalculator {
+public static boolean isEligibleForLoan (Loan loan, AccountDetails acc) {
+double minBalanceRatio;
+switch (loan.getTypeOfLoan()) {
+case CAR_LOAN:
+minBalanceRatio = 0.25;
+break;
+case HOME_LOAN:
+minBalanceRatio =0.5;
+break;
+case PERSONAL_LOAN:
+minBalanceRatio = 0.2;
+break;
+default:
+return false; // Not eligible for unknown loan type
+}
+return acc.getAccountBalance() >= loan.getLoanAmount() * minBalanceRatio;
+}
+//need to write this method
+public static boolean isValidAccountHolderDOB(LocalDate dateOfBirth) {
+//Assuming the loan application is in September 2023
+LocalDate currentDate = LocalDate.of (2023, 9, 1);
+int age = Period.between(dateOfBirth, currentDate).getYears();
+return age >= 20 && age < 41;
+}
+//need to write this method
+public static double calculateEMI(Loan loan) {
+int interestRate;
+double emi;
+if (loan.getLoanAmount() < 500000) { 
+switch (loan.getTypeOfLoan()) {
+case CAR_LOAN:
+interestRate = 8;
+break;
+case HOME_LOAN:
+interestRate = 9;
+break;
+
+case PERSONAL_LOAN: 
+interestRate = 10;
+break;
+default:
+interestRate = 0; // Handle unknown loan types
+} 
+}
+else if (loan.getLoanAmount() < 1000000) {
+switch ( loan.getTypeOfLoan()) {
+case CAR_LOAN:
+interestRate = 11;
+break;
+case HOME_LOAN:
+interestRate = 12;
+break;
+case PERSONAL_LOAN:
+interestRate = 13;
+break;
+default: 
+interestRate = 0;
+}
+}
+else if (loan.getLoanAmount() < 2000000) {
+switch (loan.getTypeOfLoan()) {
+
+case CAR_LOAN:
+interestRate = 14;
+break;
+case HOME_LOAN:
+interestRate = 15;
+break;
+case PERSONAL_LOAN:
+interestRate = 16;
+break;
+default:
+interestRate = 0;
+}
+} else {
+switch (loan.getTypeOfLoan()) {
+case CAR_LOAN:
+interestRate = 17;
+break;
+case HOME_LOAN:
+interestRate = 21;
+break;
+case PERSONAL_LOAN:
+interestRate = 22;
+break;
+default:
+interestRate = 0;
+}
+
+
+}
+
+//need to write this method
+//Calculate EMI using the specified formula
+emi = (loan.getLoanAmount() / loan.getNoOfMonths()) +((interestRate*100)/loan.getLoanAmount());
+return Math.round(emi*100.0)/100.0;
+}
+
+public static void main(String[] args) {
+
+Scanner sc = new Scanner(System.in);
+AccountDetails acc1 = new AccountDetails (sc.nextLong(), sc.next(), sc.nextDouble(), sc.next());
+String dateOfBirthInString = sc.next();
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy"); 
+LocalDate dateOfBirth = LocalDate.parse(dateOfBirthInString, formatter);
+acc1.setDateOfBirth(dateOfBirth);
+Loan loan = new Loan (LoanType.valueOf(sc.next().toUpperCase()),sc.nextDouble(),sc.nextInt());
+if(isValidAccountHolderDOB (acc1.getDateOfBirth()) && isEligibleForLoan (loan, acc1)) {
+System.out.println("EMI is: "+calculateEMI(loan));
+} 
+else{ 
+System.out.println("Sorry!! You are not eligible to get a Loan");
+}
+sc.close();
+}
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+ 4.Longest common sub string (guru)
+
+package code;
+
+import java.util.Scanner;
+
+class LongestCommonPrefix {
+public static String findLongestStringValue (String arr[]) {
+
+int numberOfWords=arr.length;
+if(numberOfWords>1) {
+String firstWord=arr[0];
+int firstWordLength=firstWord.length();
+String res="";
+for(int i=0;i<firstWordLength;i++) {
+for(int j=i+1;j<=firstWordLength;j++) {
+String stem=firstWord.substring(i,j);
+int k=1;
+for(k=1;k<numberOfWords;k++) 
+if(!arr[k].contains(stem))
+break;
+if(k==numberOfWords && res.length()<stem.length())
+res=stem;
+}
+}
+if(res.length()<2) {
+return "-1";
+}else {
+return res;
+}
+}
+else {
+return "-1";
+}
+}
+
+
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+Scanner sc=new Scanner(System.in);
+int size=sc.nextInt();
+sc.nextLine();
+String[] strArray= new String[size];
+for(int i=0;i<size;i++) {
+strArray[i]=sc.nextLine();
+}sc.close();
+String stems=findLongestStringValue(strArray);
+System.out.println(stems);
+}
+}
+
+
+__________________________________________________________________________
+
+5. Max sum sub array (guru)
+
+package code;
+
+import java.util.Scanner;
+
+public class MaxSumSubArray {
+
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+Scanner sc = new Scanner (System.in);
+int size = sc.nextInt();
+int[] arr = new int [size];
+for(int i =0; i<size; i++) {
+arr[i] = sc.nextInt();
+}
+sc.close();
+int maxSubArr = maxSubArray(arr);
+System.out.println(maxSubArr);
+
+
+}
+
+private static int maxSubArray(int[] nums) {
+// TODO Auto-generated method stub
+int maxSum = nums[0];
+int currentSum = nums[0];
+for (int i =1; i<nums.length; i++) {
+currentSum = Math.max(nums[i], currentSum + nums[i]);
+maxSum = Math.max(maxSum, currentSum);
+}
+return maxSum;
+}
+
+}
+----------------------------------------------------------------------------------------------------------------------------------------
+6. MLPL (guru)
+
+package code;
+
+import java.util.Scanner;
+
+public class MLPL {
+
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+Scanner sc = new Scanner(System.in);
+//System.out.println();
+int t= sc.nextInt();
+int enter[]=new int[t];
+int leave[]=new int[t];
+for(int i=0;i<t;i++) {
+enter[i]=sc.nextInt();
+}
+for(int i=0;i<t;i++) {
+leave[i]=sc.nextInt();
+}
+//Write your logic here
+int sum=0;
+int max=Integer.MIN_VALUE;
+for(int i=0;i<t;i++) {
+sum=sum+(enter[i]-leave[i]);
+if(max<sum) {
+max=sum;
+}
+}
+System.out.println(max);
+sc.close();
+
+}
+
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+7. Order details (guru)
+
+
+package code;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+public class OrderSolution{
+public static void main(String[] args) {
+
+Scanner input = new Scanner(System.in);
+OrderDetailsNew orderDetails = new OrderDetailsNew(input.nextLong(), input.next(), 
+input.next(), input.nextDouble(), input.nextInt(), input.next(), input.next());
+//need to write 
+String orderDateInput = input.next();
+LocalDate orderDate = null;
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+orderDate = LocalDate.parse(orderDateInput,formatter);
+input.close();
+int orderDay = orderDate.getDayOfMonth();
+String month =""+orderDate.getMonth();
+month = month.charAt(0)+month.substring(1,3).toLowerCase(); 
+if(isValidPhoneNumber(orderDetails.getPhoneNo())) {
+if (orderDetails.getIsOneDayDelivery().equals("Yes")||orderDetails.getIsOneDayDelivery().equals("Y")) {
+String oId = orderDetails.generateOrderId(orderDetails);
+System.out.println("Your order will be delivered on"+(orderDay+1)+"th "+month+","+orderDate.getYear()+"and your orderId is :"+oId);
+}
+else if(orderDetails.getIsOneDayDelivery().equals("No")||orderDetails.getIsOneDayDelivery().equals("N")) {
+String oId = orderDetails.generateOrderId(orderDetails);
+System.out.println("Your order will be delivered on"+(orderDay+7)+"th "+month+","+orderDate.getYear()+"and your orderId is :"+oId);
+}
+}
+else {
+System.out.println("Phone number is invalid!");
+}
+} 
+private static boolean isValidPhoneNumber(Long phonenumber) {
+String regex = "[1-9][0-9]{9}";
+int count =0;
+boolean toReturn = false;
+String ph =""+phonenumber;
+if(ph.matches(regex)) {
+for(int i=0;i<ph.length();i++) {
+if(ph.charAt(0)==ph.charAt(i)) {
+count++;
+}
+}
+if(count>9)
+toReturn = false;
+else
+toReturn = true;
+}
+else
+toReturn = false;
+return toReturn;
+}
+}
+
+class OrderDetailsNew { 
+private long phoneNo;
+private String orderedItemType;
+private String orderedItem;
+private Double orderPrice;
+private Integer orderQuantity;
+private String isOneDayDelivery;
+private String deliveryAddress;
+
+public OrderDetailsNew(long phoneNo, String orderedItemType, String orderedItem, Double orderPrice, Integer orderQuantity, 
+String isOneDayDelivery, String deliveryAddress) {
+
+this.phoneNo = phoneNo;
+this.orderedItemType = orderedItemType; 
+this.orderedItem = orderedItem;
+this.orderPrice = orderPrice;
+this.orderQuantity = orderQuantity;
+this.isOneDayDelivery = isOneDayDelivery; 
+this.deliveryAddress = deliveryAddress;
+}
+
+public long getPhoneNo() {
+return phoneNo;
+}
+public void setPhoneNo(long phoneNo) {
+this.phoneNo = phoneNo;
+}
+public String getOrderedItemType() { 
+return orderedItemType; 
+}
+public void setOrderedItemType (String orderedItemType) {
+this.orderedItemType = orderedItemType; 
+}
+public String getOrderedItem() {
+return orderedItem;
+}
+public void setOrderedItem(String orderedItem) { 
+this.orderedItem = orderedItem; 
+}
+public Double getOrderPrice() {
+return orderPrice;
+}
+public void setOrderPrice (Double orderPrice) { 
+this.orderPrice = orderPrice;
+}
+public Integer getOrderQuantity() {
+return orderQuantity;
+}
+public void setOrderQuantity (Integer orderQuantity) { 
+this.orderQuantity = orderQuantity;
+}
+public String getIsOneDayDelivery() {
+return isOneDayDelivery;
+}
+public void setIsOneDayDelivery(String isOneDayDelivery) { 
+this.isOneDayDelivery = isOneDayDelivery; 
+}
+public String getDeliveryAddress() { 
+return deliveryAddress;
+}
+public void setDeliveryAddress(String deliveryAddress) { 
+this.deliveryAddress = deliveryAddress;
+}
+
+
+
+public static String generateOrderId(OrderDetailsNew orderDetails) { 
+String orderId = null; 
+//need write if (orderDetails.getIsOneDayDelivery().equalsIgnoreCase("Yes") ||
+char orderItemTypeFirstChar=orderDetails.getOrderedItemType().charAt(0);
+char orderItemSecondChar = orderDetails.getOrderedItem().charAt(1);
+char orderItemTypeLastChar = orderDetails.getOrderedItemType().charAt(orderDetails.getOrderedItemType().length()-1);
+if(orderDetails.getIsOneDayDelivery().equalsIgnoreCase("N") || orderDetails.getIsOneDayDelivery().equalsIgnoreCase("No")) {
+orderId = "N"+(int)orderItemTypeFirstChar+(int)orderItemSecondChar+orderDetails.getOrderPrice().intValue()+orderDetails.getOrderQuantity();
+}
+else if(orderDetails.getIsOneDayDelivery().equalsIgnoreCase("Y") || orderDetails.getIsOneDayDelivery().equalsIgnoreCase("Yes")) {
+orderId ="#Y"+(int)orderItemTypeLastChar+(int)orderItemSecondChar+orderDetails.getOrderPrice().intValue()+orderDetails.getOrderQuantity()+orderDetails.getPhoneNo();
+}
+return orderId;
+}
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+8. Check and player (guru)
+
+package code;
+
+
+import java.util.ArrayList;
+
+import java.util.Comparator;
+
+import java.util.List;
+
+import java.util.Scanner;
+
+class Checker implements Comparator<Player>{
+public static int counter=0;
+
+@Override
+public int compare(Player o1, Player o2) {
+int toReturn=0;
+if( o1.getScore()==o2.getScore()) {
+if(o1.getName().equals(o2.getScore())) {
+if(o1.getNoOfSeasonsPlayed()==o2.getNoOfSeasonsPlayed()) {
+if((int)o2.getPhoneNumber()==o1.getPhoneNumber()) {
+counter++;
+}
+else {
+toReturn= (int)o1.getPhoneNumber()-(int)o2.getPhoneNumber();
+}
+}
+else {
+toReturn=o2.getNoOfSeasonsPlayed()-o1.getNoOfSeasonsPlayed();
+}
+}
+else {
+toReturn=o1.getName().compareTo(o2.getName());
+}
+}else {
+toReturn=o2.getScore()-o1.getScore();
+}
+if(counter== PlayerChecker.n2-1)
+System.out.println("All the Player details given are the same");
+return toReturn;
+}
+
+}
+
+class Player{
+
+private String name;
+private int score;
+private int noOfSeasonsPlayed;
+private long phoneNumber;
+
+Player(String name, int score,int noOfSeasonsPlayed,long phoneNumber){
+this.name=name;
+this.score=score;
+this.noOfSeasonsPlayed=noOfSeasonsPlayed;
+this.phoneNumber=phoneNumber;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public int getScore() {
+return score;
+}
+public void setScore(int score) {
+this.score = score;
+}
+public int getNoOfSeasonsPlayed() {
+return noOfSeasonsPlayed;
+}
+public void setNoOfSeasonsPlayed(int noOfSeasonsPlayed) {
+this.noOfSeasonsPlayed = noOfSeasonsPlayed;
+}
+public long getPhoneNumber() {
+return phoneNumber;
+}
+public void setPhoneNumber(long phoneNumber) {
+this.phoneNumber = phoneNumber;
+}
+
+
+@Override
+public String toString() {
+return this.getName()+"-"+this.getScore()+"-"+this.getNoOfSeasonsPlayed()+"-"+this.getPhoneNumber();
+} 
+}
+
+public class PlayerChecker {
+public static int n2=0;
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+Scanner sc= new Scanner(System.in);
+int n= sc.nextInt();
+n2=n;
+List<Player> players=new ArrayList<Player>();
+for(int i=1; i<=n; i++) {
+Player player= new Player(sc.next(), sc.nextInt(),sc.nextInt(),sc.nextLong());
+players.add(player);
+}
+players.sort(new Checker());
+if(Checker.counter<PlayerChecker.n2-1) {
+for(Player p: players) {
+System.out.println(p);
+}
+sc.close();
+
+}
+
+}
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+9. Policy generator (guru)
+
+package code;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class PolicyGeneratorSolution {
+
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+Scanner sc = new Scanner(System.in);
+String customerName=sc.nextLine();
+String customerDOB=sc.next();
+//write your code here
+DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+LocalDate dob=LocalDate.parse(customerDOB,dtf);
+LocalDate sysDate=LocalDate.of(2023, 9, 30);
+long age = ChronoUnit.YEARS.between(dob, sysDate);
+if(age>18 && customerName.matches("[A-Z][A-Za-z\\s]*")) {
+String[] Policy = PolicyGenerator.policyGenerator(customerName,dob);
+System.out.println(Arrays.toString(Policy));
+}else {
+System.out.println("Policy details can't be generated as either customer name is invalid or age is lessthan 18");
+}
+
+sc.close();
+}
+}
+
+class PolicyGenerator{
+public static String[] policyGenerator(String customerName,LocalDate customerDOB){
+String [] policyDetails = new String[3];
+if(customerName.length()<5) {
+policyDetails[0]="0";
+policyDetails[1]=null;
+policyDetails[2]=null;
+}
+else {
+Integer dat = customerDOB.getDayOfMonth();
+Integer mon = customerDOB.getMonth().getValue();
+Integer year = customerDOB.getYear();
+String date,month=null;
+if(dat<10) {
+date = "0"+dat.toString();
+}else {
+date=dat.toString();
+}
+if(mon<10) {
+month = "0"+ mon.toString();
+}
+policyDetails[0]=customerName.replaceAll(" ","")+"@1234";
+policyDetails[1] = customerName.substring(0, 5).toLowerCase()+date;
+policyDetails[2] = customerName.substring(0, 5)+month+year.toString();
+}
+return policyDetails;
+}
+
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+10. Reverse highest occuring word
+
+package code;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+public class ReverseNum {
+
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+Scanner sc=new Scanner(System.in);
+System.out.println("Enter the Phrase: ");
+String str=sc.nextLine();
+sc.close();
+
+List<StringBuilder> strlist=new ArrayList<>();
+String[] words=str.split(" ");
+Map<String, Integer> wordCount = new HashMap<>();
+if(str.matches("([A-Za-z]+)+( [A-Za-z]+)*") && words.length>=3) {
+for(String word:words) {
+if(wordCount.containsKey(word)) {
+wordCount.put(word, wordCount.get(word)+1);
+} else {
+wordCount.put(word, 1);
+}
+}
+List<String> highestOccuredWords=new ArrayList<>();
+int highestOccurence=Collections.max(wordCount.values());
+for(Map.Entry<String, Integer> entry:wordCount.entrySet()) { 
+if(entry.getValue()==highestOccurence) {
+highestOccuredWords.add(entry.getKey());
+}
+}
+for(String word:highestOccuredWords) {
+strlist.add(new StringBuilder(word).reverse());
+
+}
+System.out.println(strlist);
+}
+else {
+System.out.println(-1);
+}
+} 
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+11. Booking movie tickets (guru)
+
+package code;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Stream;
+
+
+
+
+
+class TicketBooking {
+private static List<Movie> getMovieDetails() {
+Movie jawan = new Movie();
+jawan.setNoOfSeatsAvailable(7);
+jawan.setMovieName("Jawan");
+jawan.setMovieDate(LocalDate.of(2023, 9, 21));
+
+Movie nunTwo = new Movie();
+nunTwo.setNoOfSeatsAvailable(5);
+nunTwo.setMovieName("NUN2");
+nunTwo.setMovieDate(LocalDate.of(2023, 9, 21));
+
+Movie gadartwo = new Movie();
+gadartwo.setNoOfSeatsAvailable(10);
+gadartwo.setMovieName("GADAR2");
+gadartwo.setMovieDate(LocalDate.of(2023, 9, 21));
+
+List<Movie> movieList = new ArrayList<>();
+movieList.add(jawan);
+movieList.add(nunTwo);
+movieList.add(gadartwo);
+return movieList;
+}
+
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+Long phoneNo = sc.nextLong();
+String name = sc.next();
+String paymentType = sc.next();
+String inputDate = sc.next();
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+LocalDate bookingDate = LocalDate.parse(inputDate, formatter);
+String movieName = sc.next();
+int noOfSeats = sc.nextInt();
+sc.close();
+User user = new User(phoneNo, name, paymentType, bookingDate, movieName, noOfSeats);
+if(validateUserDetails(user)) {
+String bookingStatus = bookTickets(user);
+System.out.println(bookingStatus);
+}else {
+System.out.println("Ticket can't be booked as User detail(s) is/are invalid!");
+}
+
+}
+
+private static boolean validateUserDetails(User user) {
+// TODO Auto-generated method stub
+return validateUserPhone(user) && validateUserName(user) && validateUserPaymentType(user) && validateUserBookingDate(user);
+
+}
+
+public static boolean validateUserPhone(User user) {
+//need write
+long phoneNumber = user.getPhoneNumber();
+String phoneString = String.valueOf(phoneNumber);
+//check for 10 digits
+if(phoneString.length() != 10 ) {
+return false;
+}
+//check for repeated
+Set<Character> digits = new HashSet<>();
+for (char digit : phoneString.toCharArray()) {
+digits.add(digit);
+}
+return digits.size() == 10;
+}
+
+
+public static boolean validateUserName(User user) {
+// logic here
+String name = user.getName();
+//check for empty
+if(name.trim().isEmpty()) {
+return false;
+}
+if(!name.matches("[A-Za-z]+")){
+return false;
+}
+if(name.length()<1) {
+return false;
+}
+if(name.contains(" ")) {
+return false;
+}
+if(!name.matches("[A-Z][a-z]*")) {
+return false;
+}
+// Return true if the name is valid, otherwise false
+return true;
+}
+
+public static boolean validateUserPaymentType(User user) {
+// logic here
+String paymentType = user.getPaymentType();
+List<String> allowedPaymentTypes = List.of("UPI", "DEBIT CARD", "CASH");
+return allowedPaymentTypes.contains(paymentType.toUpperCase());
+}
+
+public static boolean validateUserBookingDate(User user) {
+//logic here
+LocalDate bookingDate = user.getBookingDate();
+LocalDate validDate = LocalDate.of(2023, 9, 21);
+// Return true if the booking date is valid, otherwise false
+return bookingDate.isEqual(validDate);
+}
+private static String bookTickets(User user) {
+List<Movie> movieList = getMovieDetails();
+Movie selectedMovie = movieList.stream()
+.filter(movie -> movie.getMovieName() != null && 
+movie.getMovieName().equalsIgnoreCase(user.getMovieName()))
+.findFirst()
+.orElse(null);
+if (selectedMovie != null) {
+if(selectedMovie.getNoOfSeatsAvailable()>= user.getNoOfSeats()) {
+selectedMovie.setNoOfSeatsAvailable(selectedMovie.getNoOfSeatsAvailable() - user.getNoOfSeats());
+return generateBookingConfirmation(selectedMovie, user);
+
+} else {
+return "Ticket can't be booked as not enough seats available!";
+}
+}else {
+return "kindly Select a Correct Movie!";
+}
+}
+
+private static String generateBookingConfirmation(Movie movie, User user) {
+// TODO Auto-generated method stub
+return movie.getMovieName().substring(0, 3) + "-" + user.getName().substring(0, 3) + "-" +
+user.getNoOfSeats() + "-" + user.getBookingDate().getDayOfMonth() + "-" + user.getPhoneNumber();
+
+
+}
+}
+
+class User {
+private Long phoneNumber;
+private String name;
+private String paymentType;
+private LocalDate bookingDate;
+private String movieName;
+private int noOfSeats;
+
+public User(Long phoneNumber, String name, String paymentType, LocalDate bookingDate, String movieName, int noOfSeats) {
+super();
+this.phoneNumber = phoneNumber;
+this.name = name;
+this.paymentType = paymentType;
+this.bookingDate = bookingDate;
+this.movieName = movieName;
+this.noOfSeats = noOfSeats;
+}
+
+public Long getPhoneNumber() {
+return phoneNumber;
+}
+
+public void setPhoneNumber(Long phoneNumber) {
+this.phoneNumber = phoneNumber;
+}
+
+public String getName() {
+return name;
+}
+
+public void setName(String name) {
+this.name = name;
+}
+
+public String getPaymentType() {
+return paymentType;
+}
+
+public void setPaymentType(String paymentType) {
+this.paymentType = paymentType;
+}
+
+public LocalDate getBookingDate() {
+return bookingDate;
+}
+
+public void setBookingDate(LocalDate bookingDate) {
+this.bookingDate = bookingDate;
+}
+
+public String getMovieName() {
+return movieName;
+}
+
+public void setMovieName(String movieName) {
+this.movieName = movieName;
+}
+
+public int getNoOfSeats() {
+return noOfSeats;
+}
+
+public void setNoOfSeats(int noOfSeats) {
+this.noOfSeats = noOfSeats;
+}
+}
+
+class Movie {
+private int noOfSeatsAvailable;
+private String movieName;
+private LocalDate movieDate;
+
+public int getNoOfSeatsAvailable() {
+return noOfSeatsAvailable;
+}
+
+public void setNoOfSeatsAvailable(int noOfSeatsAvailable) {
+this.noOfSeatsAvailable = noOfSeatsAvailable;
+}
+
+public String getMovieName() {
+return movieName;
+}
+
+public void setMovieName(String movieName) {
+this.movieName = movieName;
+}
+
+public LocalDate getMovieDate() {
+return movieDate;
+}
+
+public void setMovieDate(LocalDate movieDate) {
+this.movieDate = movieDate;
+}
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+12. User name policy updater (guru)
+
+
+package code;
+
+import java.util.Scanner;
+
+public class userNamePolicyUpdater {
+
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+Scanner sc = new Scanner(System.in);
+System.out.println("enter name: ");
+String userName = sc.next();
+boolean isValid = updateUserName(userName);
+if(isValid) {
+System.out.println(userName+" "+"is valid"); 
+}else {
+System.out.println(userName+" "+"is inValid");
+}
+}
+
+private static boolean updateUserName(String userName) {
+// TODO Auto-generated method stub
+String regex = "^[a-zA-Z][a-zA-Z0-9]{7,29}$";
+return userName.matches(regex);
+}
+
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+13. Book a bike service (guru)
+
+package code;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+class VehicleService {
+
+private String customerName;
+private String bikeNo;
+private Long phoneNo;
+private ServiceCategory serviceCategory;
+private LocalDate serviceDate;
+
+public String getCustomerName() {
+return customerName;
+}
+public void setCustomerName(String customerName) {
+this.customerName = customerName;
+}
+public String getBikeNo() {
+return bikeNo;
+}
+public void setBikeNo(String bikeNo) {
+this.bikeNo = bikeNo;
+}
+public Long getPhoneNo() {
+return phoneNo;
+}
+public void setPhoneNo(Long phoneNo) {
+this.phoneNo = phoneNo;
+}
+public ServiceCategory getServiceCategory() {
+return serviceCategory;
+}
+public void setServiceCategory(ServiceCategory serviceCategory) {
+this.serviceCategory = serviceCategory;
+}
+public LocalDate getServiceDate() {
+return serviceDate;
+}
+public void setServiceDate(LocalDate serviceDate) {
+this.serviceDate = serviceDate;
+}
+
+@Override
+public String toString() {
+return "vehicleservice [customerName="+ customerName+",bikeNo= " +
+bikeNo+", phoneNo "+", serviceCategory=" +",serviceDate=" +serviceDate+ "]";
+}
+
+public static void main(String[] args) {
+
+Scanner sc=new Scanner(System.in);
+VehicleService vehicleService=new VehicleService();
+
+String customerName=sc.nextLine();
+vehicleService.setCustomerName(customerName);
+
+String bikeNo=sc.nextLine();
+vehicleService.setBikeNo(bikeNo);
+
+Long phoneNo=sc.nextLong();
+vehicleService.setPhoneNo(phoneNo);
+
+String vehicleServiceType=sc.next();
+Integer noOfservicesAvailable=sc.nextInt();
+
+ServiceCategory serviceCategory=new ServiceCategory();
+if(vehicleServiceType.equalsIgnoreCase("free")) {
+serviceCategory=new ServiceCategory(VehicleServiceType.FREE,noOfservicesAvailable);
+}
+else {
+serviceCategory=new ServiceCategory(VehicleServiceType.PAID,noOfservicesAvailable);
+}
+
+vehicleService.setServiceCategory(serviceCategory);
+String serviceDateInString=sc.next();
+DateTimeFormatter formatter=DateTimeFormatter.ofPattern("d/MM/yyyy");
+LocalDate serviceDate=LocalDate.parse(serviceDateInString,formatter);
+
+vehicleService.setServiceDate(serviceDate);
+
+//code
+
+if(vehicleServiceType.equals("free") || vehicleServiceType.equals("paid")) {
+
+Validator.validate(vehicleService);
+}else {
+System.out.println("Kindly select a corect service type - either FREE or PAID");
+}
+sc.close();
+}
+
+}
+enum VehicleServiceType {
+FREE, PAID;
+}
+
+class ServiceCategory {
+
+private VehicleServiceType vehicleServiceType;
+private Integer noOfservicesAvailable;
+
+public ServiceCategory() {
+super();
+}
+
+public ServiceCategory(VehicleServiceType vehicleServiceType,Integer noOfservicesAvailable) {
+super();
+
+this.vehicleServiceType=vehicleServiceType;
+this.noOfservicesAvailable=noOfservicesAvailable;
+}
+
+public VehicleServiceType getVehicleServiceType() {
+return vehicleServiceType;
+}
+
+public void setVehicleServiceType(VehicleServiceType vehicleServiceType) {
+this.vehicleServiceType = vehicleServiceType;
+}
+
+public Integer getNoOfservicesAvailable() {
+return noOfservicesAvailable;
+}
+
+public void setNoOfservicesAvailable(Integer noOfservicesAvailable) {
+this.noOfservicesAvailable = noOfservicesAvailable;
+}
+
+@Override
+public String toString() {
+return "ServiceCategory [vehicleServiceType="+ vehicleServiceType +",noOfservicesAvailable=" + noOfservicesAvailable+"]";
+}
+}
+class Validator {
+public static void validate(VehicleService vehicleService) {
+
+System.out.println(isValidCustomerName (vehicleService.getCustomerName()));
+System.out.println(isValidBikeNo (vehicleService.getBikeNo()));
+System.out.println(isValidPhoneNo (vehicleService.getPhoneNo()));
+System.out.println(isValidServiceType(vehicleService.getServiceCategory()));
+System.out.println(isValidServiceDate (vehicleService.getServiceDate()));
+}
+//code
+public static Boolean isValidCustomerName(String customerName) {
+if(customerName== null || customerName.isBlank()) {
+return false;
+}
+String name=customerName.toLowerCase();
+name=name.trim().replaceAll("\\s+", " ");
+
+if(name.contains(" ")) {
+String[] names=name.split(" ");
+if(names.length>2 || names.length==0) {
+return false;
+}
+for(int i=0;i<names.length;i++) {
+names[i]=names[i].substring(0,1).toUpperCase()+names[i].substring(1).toLowerCase();
+}
+name=String.join(" ", names);
+}
+if(!name.matches("[A-Z][a-z]+( [A-Z][a-z]+)*")) {
+return false;
+}
+return true;
+}
+//code 
+public static Boolean isValidBikeNo(String bikeNo) {
+if(bikeNo==null || bikeNo.isBlank()) {
+return false;
+}
+String regex="^\\d{2} BH \\d{4} [A-HJ-NP-Z]{2}$";
+return bikeNo.matches(regex);
+}
+public static Boolean isValidPhoneNo(Long phoneNo) {
+
+if(phoneNo ==null) {
+return false;
+}
+String phoneStr=String.valueOf(phoneNo);
+if(phoneStr.length()!=10) {
+return false;
+}
+if(phoneStr.chars().distinct().count()==1) {
+return false;
+}
+if(!phoneStr.startsWith("6") && !phoneStr.startsWith("7") && !phoneStr.startsWith("8") && !phoneStr.startsWith("9")) {
+return false;
+}
+return true;
+}
+//code
+public static Boolean isValidServiceType(ServiceCategory serviceCategory) {
+
+if(serviceCategory ==null) {
+return false;
+}
+
+VehicleServiceType vehicleServiceType = serviceCategory.getVehicleServiceType();
+if(!Arrays.asList(VehicleServiceType.values()).contains(vehicleServiceType)) {
+return false;
+}
+
+int noOfservicesAvailable = serviceCategory.getNoOfservicesAvailable();
+if(noOfservicesAvailable<=0) {
+return false;
+}
+
+return true;
+}
+
+public static Boolean isValidServiceDate(LocalDate lastServiceDate) {
+if(lastServiceDate==null) {
+return false;
+}
+LocalDate currentDate = LocalDate.now();
+
+return lastServiceDate.isBefore(currentDate) || lastServiceDate.equals(currentDate);
+}
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+14. word scramble (guru)
+
+
+package code;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Comparator;
+
+public class WordScramble {
+
+public static void main(String[] args) {
+Scanner sc=new Scanner(System.in);
+String str = sc.nextLine();
+
+String[] strArr= str.split(" ");
+String scrumble ="";
+for (int i=0; i < strArr.length; i++) {
+if (strArr[i].length() < 2) {
+scrumble+=strArr[i].charAt(0);
+}
+else if(i==0 || i%2==0) {
+char first=strArr[i].charAt(0);
+char last=strArr[i].charAt(strArr[i].length()-1);
+List<String>li = new ArrayList<String>();
+for(int j =0; j<strArr[i].length();j++) {
+if(j==0 || j == strArr[i].length()-1)
+continue;
+else {
+li.add(""+strArr[i].charAt(j));
+}
+}
+Collections.sort(li);
+Collections.reverse(li);
+scrumble+=first;
+for(String s:li) {
+scrumble+=s;
+}
+scrumble+=last;
+}
+else {
+char first=strArr[i].charAt(0);
+char last=strArr[i].charAt(strArr[i].length()-1);
+List<String>li = new ArrayList<String>();
+for(int j =0; j<strArr[i].length();j++) {
+if(j==0 || j == strArr[i].length()-1)
+continue;
+else {
+li.add(""+strArr[i].charAt(j));
+}
+}
+Collections.sort(li);
+scrumble+=" "+first;
+for(String s:li) {
+scrumble+=s;
+}
+scrumble+=last+" ";
+} 
+}
+System.out.println(scrumble);
+}
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------
+14. word scramble (guru)
+
+
+package code;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Comparator;
+
+public class WordScramble {
+
+public static void main(String[] args) {
+Scanner sc=new Scanner(System.in);
+String str = sc.nextLine();
+
+String[] strArr= str.split(" ");
+String scrumble ="";
+for (int i=0; i < strArr.length; i++) {
+if (strArr[i].length() < 2) {
+scrumble+=strArr[i].charAt(0);
+}
+else if(i==0 || i%2==0) {
+char first=strArr[i].charAt(0);
+char last=strArr[i].charAt(strArr[i].length()-1);
+List<String>li = new ArrayList<String>();
+for(int j =0; j<strArr[i].length();j++) {
+if(j==0 || j == strArr[i].length()-1)
+continue;
+else {
+li.add(""+strArr[i].charAt(j));
+}
+}
+Collections.sort(li);
+Collections.reverse(li);
+scrumble+=first;
+for(String s:li) {
+scrumble+=s;
+}
+scrumble+=last;
+}
+else {
+char first=strArr[i].charAt(0);
+char last=strArr[i].charAt(strArr[i].length()-1);
+List<String>li = new ArrayList<String>();
+for(int j =0; j<strArr[i].length();j++) {
+if(j==0 || j == strArr[i].length()-1)
+continue;
+else {
+li.add(""+strArr[i].charAt(j));
+}
+}
+Collections.sort(li);
+scrumble+=" "+first;
+for(String s:li) {
+scrumble+=s;
+}
+scrumble+=last+" ";
+} 
+}
+System.out.println(scrumble);
+}
+}
+
+1265898_vimalesh.v 2/19/2024 7:33 PM • Inputs and outputs
+
+===========================
+//MaxSubArray
+9 1 -2 3 4 -5 2 -1 6 -2
+9
+
+5 -1 -2 -3 -4 -5
+-1
+
+5 1 2 3 4 5
+15
+===========================
+//MLPL
+5 7 0 5 1 3 1 2 1 3 4
+8
+
+4 4 5 6 8 0 0 0 0
+23
+==============================
+//BinaryMaxMinus
+10 9 2 3 4 5 6 7 8 18 0
+00001000
+
+6 1 2 3 4 5 6
+00000101
+
+6 -6 5 4 3 2 1
+00000000
+==========================================
+//EncryptNumbers
+10 9 121 27 90 64 36 78 66 900 2
+[2, 9, 72, 63, 46, B66, N87, Z9, y121, 9]
+
+4 27 4 120 65
+[4, 72, A56, x21]
+
+5 1 4 9 16 27
+[1, 4, 9, 61, 72]
+
+5 66 67 68 119 70
+[B66, C76, D86, F7, w911]
+
+==========================================
+//InfyEmiCalculator
+1001001
+John
+8000
+Boston
+12/01/1993
+Home_Loan
+15000
+72
+EMI is: 208.39
+
+1001001
+John
+2000
+Boston
+12/01/1993
+Home_Loan
+15000
+72
+Sorry!! You are not eligible to get a Loan
+
+1001001
+John
+3000000
+Boston
+12/01/1990
+Personal_Loan
+5000000
+72
+EMI is: 69444.44
+
+1001001
+John
+999999
+Boston
+12/01/1990
+Personal_Loan
+5000000
+72
+Sorry!! You are not eligible to get a Loan
+
+=====================================
+//orderDetails
+
+7022713788
+Electronics
+TV
+220.0
+2
+Yes
+Bangalore
+2023-Jun-13
+Your order will be delivered on14th Jun,2023and your orderId is :#Y1158622027022713788
+
+7022713788
+Electronics
+TV
+220.0
+2
+N
+Bangalore
+2023-Jun-13
+Your order will be delivered on20th Jun,2023and your orderId is :N69862202
+
+9999999999
+Electronics
+TV
+220.0
+2
+Yes
+Bangalore
+2023-Jun-13
+Phone number is invalid!
+==========================================
+//PolicyGenerator
+
+Donald Biden
+1946-Jun-14
+[DonaldBiden@1234, donal14, Donal061946]
+
+Rafal Federer
+1986-Jun-03
+[RafalFederer@1234, rafal03, Rafal061986]
+
+Tom
+2023-Jun-03
+Policy details can't be generated as either customer name is invalid or age is lessthan 18
+
+tom chan
+1993-May-13
+Policy details can't be generated as either customer name is invalid or age is lessthan 18
+
+=====================================
+//ReverseNumbers
+
+This is Is done done Done By by me ME me Me me
+[em]
+
+This is Is done done Done By by me ME me Me me?
+-1
+
+null
+-1
+
+""(Empty Sentence)
+-1
+
+""(Sentence containing only spaces)
+-1
+
+Hi(Sentence containing a single world)
+-1
+=========================================
+//TicketBooking
+
+9876543210
+Debashis
+UPI
+21/09/2023
+NUN2
+2
+NUN-Deb-2-21-9876543210
+
+987654321
+Debashis
+UPI
+21/09/2023
+Jawan
+2
+Ticket can't be booked as User detail(s) is/are invalid!
+
+9876543210
+Debashis123
+UPI
+21/09/2023
+NUN2
+2
+Ticket can't be booked as User detail(s) is/are invalid!
+
+9876543210
+Debashis
+CREDIT
+21/09/2023
+Jawan
+2
+Ticket can't be booked as User detail(s) is/are invalid!
+
+9876543210
+Debashis
+UPI
+22/09/2023
+GADAR2
+2
+Ticket can't be booked as User detail(s) is/are invalid!
+
+9876543210
+Debashis
+UPI
+21/09/2023
+IronMan
+2
+kindly Select a Correct Movie!
+
+9876543210
+Debashis
+UPI
+21/09/2023
+Jawan
+200
+Ticket can't be booked as not enough seats available!
+
+====================
+
+//Book a BikeService
+raghuveer lohia
+21 BH 0001 AA
+8179892186
+free
+1
+25/06/2023
+true
+true
+true
+true
+true
+
+Raghuveer Lohia
+21 BH 0001 AA
+8179892186
+free
+1
+25/06/2023
+true
+true
+true
+true
+true
+
+Raghuveer Lohia
+21 BH 009 AA
+8179892186
+free
+1
+25/06/2023
+true
+false
+true
+true
+true
+
+Raghuveer Lohia
+21 BH 0001 AA
+9999999999
+free
+1
+25/06/2023
+true
+true
+false
+true
+true
+
+Raghuveer Lohia
+21 BH 0001 AA
+8179892186
+free
+0
+25/06/2023
+true
+true
+true
+false
+true
+
+Raghuveer Lohia
+21 BH 0001 AA
+8179892186
+Credit
+1
+25/06/2023
+Kindly select a corect service type - either FREE or PAID
+
+Raghuveer Lohia
+21 BH 0001 AA
+8179892186
+free
+1
+25/06/2030
+true
+true
+true
+true
+false
+
+=================================
+//check and player
+
+3
+Lampard
+2
+2
+7876543210
+Lampard
+2
+2
+8876543211
+Lampard
+2
+2
+9876543212
+Lampard-2-2-7876543210
+Lampard-2-2-8876543211
+Lampard-2-2-9876543212
+--
+3
+Lampard
+2
+2
+7876543210
+Lampard
+2
+2
+7876543210
+Lampard
+2
+2
+7876543210
+Lampard-2-2-7876543210
+Lampard-2-2-7876543210
+Lampard-2-2-7876543210
+--
+3
+Lampard
+2
+2
+9876543210
+Lampard
+2
+4
+9876543211
+Lampard
+2
+5
+9876543212
+Lampard-2-2-9876543210
+Lampard-2-4-9876543211
+Lampard-2-5-9876543212
+---
+3
+Lampard
+2
+2
+9876543210
+Mata
+2
+4
+9876543211
+Drogba
+2
+5
+9876543212
+Drogba-2-5-9876543212
+Lampard-2-2-9876543210
+Mata-2-4-9876543211
+---
+3
+Lampard
+2
+2
+9876543210
+Mata
+3
+4
+9876543211
+Drogba
+4
+5
+9876543212
+Drogba-4-5-9876543212
+Mata-3-4-9876543211
+Lampard-2-2-9876543210
+===============================
+//LongestCommonPrefix
+
+3
+Hello
+hello there
+hElLo there
+-1
+
+3
+Apple
+App
+Application
+App
+
+3
+Hello
+Hello world
+hello there
+ello
+
+3
+Dog
+cat
+Mouse
+-1
+
+1
+Dog
+-1
+============
+//WordScrumable
+
+Hello to my world
+Hlleo to my wlord 
+
+This is a sample sentence
+Tihs is a salmpe stnneece
+======================
+//UsernamePolicy
+
+_Julia007
+_Julia007 is inValid
+
+
+=================
+
+
+
